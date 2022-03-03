@@ -1,0 +1,28 @@
+pkgname='libseven-git'
+pkgver=0.3.2.r0.g7bb578d
+pkgrel=1
+pkgdesc='from-scratch library for GBA development'
+arch=('any')
+url='https://github.com/LunarLambda/libseven'
+license=('MPL2')
+groups=('gba-dev')
+depends=('devkitARM' 'devkitarm-rules' 'devkitarm-crtls')
+makedepends=('git')
+provides=('libseven')
+conflicts=('libseven')
+options=('!strip' 'libtool' 'staticlibs')
+source=('libseven::git+https://github.com/LunarLambda/libseven')
+md5sums=('SKIP')
+
+pkgver() {
+    cd libseven
+    git describe --long | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+    make -C libseven -f Makefile.dkp
+}
+
+package() {
+    make -C libseven -f Makefile.dkp DESTDIR=$pkgdir install
+}
